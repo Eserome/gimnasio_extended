@@ -22,6 +22,7 @@ import com.hibernate.dao.EjercicioDAO;
 import com.hibernate.model.CE;
 import com.hibernate.model.Cliente;
 import com.hibernate.model.Ejercicio;
+import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -45,6 +46,9 @@ import java.awt.Component;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -55,6 +59,7 @@ import javax.swing.JList;
 import java.awt.Dimension;
 import javax.swing.DefaultComboBoxModel;
 import com.hibernate.gui.App.zona;
+import javax.swing.border.LineBorder;
 
 
 
@@ -77,8 +82,10 @@ public class App {
 	private JTextField textField_añadirEjercicioCliente;
 	private JTextField picClientTextPath;
 	private JTextField picExerciceTextPath;
+	private JTable tablaEjercicios;
+	private JTable tablaClientes;
 
-	
+	/* Enum para determinar el nombre de las zonas de el gimnasio, a las que los ejercicios van a pertenecer */
 	public enum zona{
 		AEROBICO, MUSCULACION, ZUMBA
 	}
@@ -103,8 +110,25 @@ public class App {
 	 */
 	public App() {
 		initialize();
+		configuracionOrigen();
 	}
 	
+	/**
+	 * Es la configuración incial que se ejecuta al cargar la aplicación que impide que se puedan
+	 * seleccionar mas de una fila a la vez
+	 */
+	public void configuracionOrigen() {
+		tablaEjercicios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tablaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	}
+	
+	/**
+	 * Es una función que corrige la entrada del campo altura
+	 * para que cuando se introduzca una coma en vez de un punto
+	 * lo adapte para que entre correctamente en la BBDD
+	 * @param altura Es la altura que se va a introducir en el cliente
+	 * @return devuvelve la altura con formato permitido por la base de datos
+	 */
 	public static String corregirAltura(String altura) {
         Pattern pattern = Pattern.compile(",");
         Matcher matcher = pattern.matcher(altura);
@@ -112,6 +136,12 @@ public class App {
         return alturaCorregida;
     }
 
+	/**
+	 * Es una función que comprueba si una imagen tiene formato correcto
+	 * para ser representada en la aplicación
+	 * @param picPath La ruta de la imagen para comprobar si la extensión es correcta
+	 * @return Devuelve true si comprueba que es una imagen a partir de la ruta del archivo
+	 */
 	public static boolean comprobarSiEsImagen(String picPath) {
 		Pattern patternImagen = Pattern.compile(".*\\.(jpg|jpeg|png|gif|bmp)$");
         Matcher matcherImagen = patternImagen.matcher(picPath);
@@ -125,6 +155,17 @@ public class App {
 		
 	}
 	
+	/**
+	 * Es una función que permite comprobar 
+	 * si los datos introducidos en los campos del apartado Ejercicios son correctos
+	 * 
+	 * @param textField_nombreEjercicio Es el campo de nombre del ejercicio
+	 * @param textField_cargaEnKg Es el campo de la carga en Kg del ejercicio
+	 * @param textField_repeticiones Es el campo de las repeticiones del ejercicio
+	 * @param textField_series Es el campo de las series que tiene el ejercicio
+	 * @param picExerciceTextPath Es el campo de la ruta del archivo de imagen del ejercicio
+	 * @return Devuelve true si los datos introducidos en los campos del Ejercicio tienen formato correcto, sinó está establecido mensajes de dialogo indicando el fallo
+	 */
 	public static boolean comprobarValidezCamposEjercicio(JTextField textField_nombreEjercicio, JTextField textField_cargaEnKg, JTextField textField_repeticiones, JTextField textField_series, JTextField picExerciceTextPath) {
 		boolean todoOk = false;
 		
@@ -238,6 +279,18 @@ public class App {
 		
 	}
 	
+	/**
+	 * Es una función que permite comprobar 
+	 * si los datos introducidos en los campos del apartado Clientes son correctos
+	 * @param altura Es la altura formateada para que entre bien en la BBDD
+	 * @param textField_altura Es el campo de la altura del Cliente
+	 * @param textField_edad Es el campo de la edad del Cliente
+	 * @param textField_peso Es el campo del peso del Cliente
+	 * @param textField_nombreCliente Es el campo del nombre del Cliente
+	 * @param textField_apellidosCliente Es el campo de apellidos del Cliente
+	 * @param picClientTextPath Es el campo de la ruta del archivo de la imagen del Cliente
+	 * @return Devuelve true si los datos introducidos en los campos del Cliente tienen formato correcto, sinó está establecido mensajes de dialogo indicando el fallo
+	 */
 	public static boolean comprobarValidezCamposCliente(double altura, JTextField textField_altura, JTextField textField_edad,
 			JTextField textField_peso, JTextField textField_nombreCliente, JTextField textField_apellidosCliente,
 			JTextField picClientTextPath) {
@@ -352,6 +405,16 @@ public class App {
 		
 	}
 
+	/**
+	 * Es una función que muestra una imagen en un label concreto a partir de la ruta del archivo
+	 * y puede ser posicionada con unos valores concretos para ajustar tamaño y ubicación
+	 * @param picPath La ruta del archivo Imagen
+	 * @param labelImagen El label donde se va a situar la imagen
+	 * @param x Componente x
+	 * @param y Componente y
+	 * @param z Componente z
+	 * @param e Componente e
+	 */
 	public static void mostrarImagen(String picPath, JLabel labelImagen, int x, int y, int z, int e) {
 		try {
             BufferedImage img = ImageIO.read(new File(picPath));
@@ -372,7 +435,17 @@ public class App {
 	 * Initialize the contents of the frame
 	 */
 	private void initialize() {
+		try {
+			UIManager.setLookAndFeel(new AcrylLookAndFeel());
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
 		frmGimnasioSanPancracio = new JFrame();
+		frmGimnasioSanPancracio.getContentPane().setForeground(new Color(0, 255, 0));
+		frmGimnasioSanPancracio.getContentPane().setBackground(new Color(183, 111, 255));
 		frmGimnasioSanPancracio.setTitle("Gimnasio San Pancracio");
 		frmGimnasioSanPancracio.setBounds(100, 100, 1575, 800);
 		frmGimnasioSanPancracio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -381,8 +454,8 @@ public class App {
 		
 		
 		
-		DefaultTableModel modelClientes = new DefaultTableModel();
 		
+		DefaultTableModel modelClientes = new DefaultTableModel();
 		modelClientes.addColumn("id");
 		modelClientes.addColumn("Nombre");
 		modelClientes.addColumn("Apellidos");
@@ -390,8 +463,8 @@ public class App {
 		modelClientes.addColumn("Altura");
 		modelClientes.addColumn("Peso");
 		
-		DefaultTableModel modelEjercicios = new DefaultTableModel();
 		
+		DefaultTableModel modelEjercicios = new DefaultTableModel();
 		modelEjercicios.addColumn("id");
 		modelEjercicios.addColumn("Nombre");
 		modelEjercicios.addColumn("Numero de Series");
@@ -399,13 +472,17 @@ public class App {
 		modelEjercicios.addColumn("Carga en Kg");
 		modelEjercicios.addColumn("Zona");
 		
+
 		DefaultTableModel modelCE = new DefaultTableModel();
-		
 		modelCE.addColumn("cliente_id");
 		modelCE.addColumn("ejercicio_id");
 	
 		
-		JTable tablaEjercicios = new JTable(modelEjercicios);
+		tablaEjercicios = new JTable(modelEjercicios);
+		tablaEjercicios.setBackground(new Color(210, 166, 255));
+		tablaEjercicios.setBorder(new LineBorder(new Color(128, 0, 255)));
+		tablaEjercicios.setGridColor(new Color(128, 0, 255));
+		tablaEjercicios.setSelectionBackground(new Color(210, 50, 255));
 		tablaEjercicios.getColumnModel().getColumn(0).setPreferredWidth(10);
 		tablaEjercicios.getColumnModel().getColumn(1).setPreferredWidth(100);
 		tablaEjercicios.getColumnModel().getColumn(2).setPreferredWidth(50);
@@ -420,7 +497,11 @@ public class App {
 		picClientTextPath.setColumns(10);
 		
 		
-		JTable tablaClientes = new JTable(modelClientes);
+		tablaClientes = new JTable(modelClientes);
+		tablaClientes.setBorder(new LineBorder(new Color(128, 0, 255)));
+		tablaClientes.setBackground(new Color(210, 166, 255));
+		tablaClientes.setGridColor(new Color(128, 0, 255));
+		tablaClientes.setSelectionBackground(new Color(210, 50, 255));
 		tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(10);
 		tablaClientes.getColumnModel().getColumn(1).setPreferredWidth(50);
 		tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -444,7 +525,7 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(scrollPaneCE);
 		
 		JComboBox comboBox_MostrarClientes = new JComboBox();
-		comboBox_MostrarClientes.setBounds(221, 437, 134, 24);
+		comboBox_MostrarClientes.setBounds(221, 437, 168, 24);
 		frmGimnasioSanPancracio.getContentPane().add(comboBox_MostrarClientes);
 		
 		JComboBox comboBox_clienteId = new JComboBox();
@@ -520,6 +601,17 @@ public class App {
 		
 		
 		JButton btnGuardar = new JButton("Añadir");
+		btnGuardar.setBackground(Color.WHITE);
+		btnGuardar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnGuardar.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnGuardar.setBackground(Color.WHITE);
+			}
+		});
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -541,11 +633,32 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(btnGuardar);
 		
 		JButton btnActualizar = new JButton("Actualizar");
-		
+		btnActualizar.setBackground(Color.WHITE);
+		btnActualizar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnActualizar.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnActualizar.setBackground(Color.WHITE);
+			}
+		});
 		btnActualizar.setBounds(221, 371, 175, 32);
 		frmGimnasioSanPancracio.getContentPane().add(btnActualizar);
 		
 		JButton btnBorrar = new JButton("Borrar");
+		btnBorrar.setBackground(Color.WHITE);
+		btnBorrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnBorrar.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnBorrar.setBackground(Color.WHITE);
+			}
+		});
 		btnBorrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -559,7 +672,8 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(btnBorrar);
 		
 		JLabel lblClientes = new JLabel("CLIENTES");
-		lblClientes.setFont(new Font("Dhurjati", Font.BOLD, 24));
+		lblClientes.setForeground(new Color(0, 255, 0));
+		lblClientes.setFont(new Font("OCR A Extended", Font.BOLD, 24));
 		lblClientes.setBounds(33, 12, 161, 32);
 		frmGimnasioSanPancracio.getContentPane().add(lblClientes);
 		
@@ -577,16 +691,28 @@ public class App {
 		
 		JComboBox comboBoxZona = new JComboBox();
 		comboBoxZona.setModel(new DefaultComboBoxModel(zona.values()));
-		comboBoxZona.setBounds(929, 303, 198, 21);
+		comboBoxZona.setBounds(905, 303, 222, 21);
 		frmGimnasioSanPancracio.getContentPane().add(comboBoxZona);
 		
 		
 		JLabel lblClientes_1 = new JLabel("EJERCICIOS");
-		lblClientes_1.setFont(new Font("Dhurjati", Font.BOLD, 24));
+		lblClientes_1.setForeground(new Color(0, 255, 0));
+		lblClientes_1.setFont(new Font("OCR A Extended", Font.BOLD, 24));
 		lblClientes_1.setBounds(592, 12, 160, 32);
 		frmGimnasioSanPancracio.getContentPane().add(lblClientes_1);
 		
 		JButton btnGuardarEjercicio = new JButton("Añadir");
+		btnGuardarEjercicio.setBackground(Color.WHITE);
+		btnGuardarEjercicio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnGuardarEjercicio.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnGuardarEjercicio.setBackground(Color.WHITE);
+			}
+		});
 		btnGuardarEjercicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -613,11 +739,32 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(btnGuardarEjercicio);
 		
 		JButton btnActualizar_1 = new JButton("Actualizar");
-		
+		btnActualizar_1.setBackground(Color.WHITE);
+		btnActualizar_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnActualizar_1.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnActualizar_1.setBackground(Color.WHITE);
+			}
+		});
 		btnActualizar_1.setBounds(771, 371, 183, 32);
 		frmGimnasioSanPancracio.getContentPane().add(btnActualizar_1);
 		
 		JButton btnBorrar_1 = new JButton("Borrar");
+		btnBorrar_1.setBackground(Color.WHITE);
+		btnBorrar_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnBorrar_1.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnBorrar_1.setBackground(Color.WHITE);
+			}
+		});
 		btnBorrar_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Ejercicio ej = EjercicioDAO.selectEjercicioByID(Integer.valueOf(textField_idEjercicio.getText()));
@@ -636,7 +783,8 @@ public class App {
 		buttonAñadirImagenEjercicio.setIcon(new ImageIcon(imagenReducida));
 		
 		JLabel lblEjerciciosDelCliente = new JLabel("RUTINA PARA");
-		lblEjerciciosDelCliente.setFont(new Font("Dhurjati", Font.BOLD, 24));
+		lblEjerciciosDelCliente.setForeground(new Color(0, 255, 0));
+		lblEjerciciosDelCliente.setFont(new Font("OCR A Extended", Font.BOLD, 24));
 		lblEjerciciosDelCliente.setBounds(33, 428, 231, 32);
 		frmGimnasioSanPancracio.getContentPane().add(lblEjerciciosDelCliente);
 		
@@ -644,6 +792,17 @@ public class App {
 		
 		JButton btnBorrarRutina = 
 				new JButton("Borrar");
+		btnBorrarRutina.setBackground(Color.WHITE);
+		btnBorrarRutina.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnBorrarRutina.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnBorrarRutina.setBackground(Color.WHITE);
+			}
+		});
 		btnBorrarRutina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -668,14 +827,20 @@ public class App {
 		
 		
 		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblNombre.setForeground(new Color(0, 255, 0));
 		lblNombre.setBounds(751, 245, 70, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblNombre);
 		
 		JLabel lblRepeticiones = new JLabel("Repeticiones:");
+		lblRepeticiones.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblRepeticiones.setForeground(new Color(0, 255, 0));
 		lblRepeticiones.setBounds(751, 267, 94, 24);
 		frmGimnasioSanPancracio.getContentPane().add(lblRepeticiones);
 		
 		JLabel lblSeries = new JLabel("Series:");
+		lblSeries.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblSeries.setForeground(new Color(0, 255, 0));
 		lblSeries.setBounds(895, 271, 53, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblSeries);
 		
@@ -690,6 +855,8 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_repeticiones);
 		
 		JLabel lblCargaEnKg = new JLabel("Carga en KG:");
+		lblCargaEnKg.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblCargaEnKg.setForeground(new Color(0, 255, 0));
 		lblCargaEnKg.setBounds(998, 267, 98, 20);
 		frmGimnasioSanPancracio.getContentPane().add(lblCargaEnKg);
 		
@@ -704,6 +871,8 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_nombreEjercicio);
 		
 		JLabel lblNombre_1 = new JLabel("Nombre:");
+		lblNombre_1.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblNombre_1.setForeground(new Color(0, 255, 0));
 		lblNombre_1.setBounds(177, 244, 70, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblNombre_1);
 		
@@ -713,15 +882,20 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_nombreCliente);
 		
 		JLabel lblClientes_1_1 = new JLabel("AFEGIR RUTINA");
-		lblClientes_1_1.setFont(new Font("Dhurjati", Font.BOLD, 24));
+		lblClientes_1_1.setForeground(new Color(0, 255, 0));
+		lblClientes_1_1.setFont(new Font("OCR A Extended", Font.BOLD, 24));
 		lblClientes_1_1.setBounds(1161, 12, 198, 32);
 		frmGimnasioSanPancracio.getContentPane().add(lblClientes_1_1);
 		
 		JLabel lblCliente = new JLabel("Cliente:id");
+		lblCliente.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblCliente.setForeground(new Color(0, 255, 0));
 		lblCliente.setBounds(1162, 44, 70, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblCliente);
 		
 		JLabel lblCliente_1 = new JLabel("Ejercicio:id");
+		lblCliente_1.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblCliente_1.setForeground(new Color(0, 255, 0));
 		lblCliente_1.setBounds(1299, 44, 99, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblCliente_1);
 		
@@ -736,8 +910,9 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_añadirEjercicioCliente);
 		
 		JLabel lblClientes_1_1_1 = new JLabel("BORRAR RUTINA");
-		lblClientes_1_1_1.setFont(new Font("Dhurjati", Font.BOLD, 24));
-		lblClientes_1_1_1.setBounds(1161, 194, 209, 53);
+		lblClientes_1_1_1.setForeground(new Color(0, 255, 0));
+		lblClientes_1_1_1.setFont(new Font("OCR A Extended", Font.BOLD, 24));
+		lblClientes_1_1_1.setBounds(1161, 187, 209, 53);
 		frmGimnasioSanPancracio.getContentPane().add(lblClientes_1_1_1);
 		
 		
@@ -747,6 +922,8 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_apellidosCliente);
 		
 		JLabel lblNombre_1_1 = new JLabel("Apellidos:");
+		lblNombre_1_1.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblNombre_1_1.setForeground(new Color(0, 255, 0));
 		lblNombre_1_1.setBounds(177, 270, 70, 24);
 		frmGimnasioSanPancracio.getContentPane().add(lblNombre_1_1);
 		
@@ -756,19 +933,25 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_edad);
 		
 		JLabel lblEdad = new JLabel("Edad:");
+		lblEdad.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblEdad.setForeground(new Color(0, 255, 0));
 		lblEdad.setBounds(337, 302, 62, 21);
 		frmGimnasioSanPancracio.getContentPane().add(lblEdad);
 		
-		JLabel lblAltura = new JLabel("Altura(metros):");
+		JLabel lblAltura = new JLabel("Altura(m):");
+		lblAltura.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblAltura.setForeground(new Color(0, 255, 0));
 		lblAltura.setBounds(177, 300, 87, 25);
 		frmGimnasioSanPancracio.getContentPane().add(lblAltura);
 		
 		textField_altura = new JTextField();
 		textField_altura.setColumns(10);
-		textField_altura.setBounds(249, 299, 62, 25);
+		textField_altura.setBounds(249, 301, 62, 25);
 		frmGimnasioSanPancracio.getContentPane().add(textField_altura);
 		
 		JLabel lblPeso = new JLabel("Peso(Kg):");
+		lblPeso.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblPeso.setForeground(new Color(0, 255, 0));
 		lblPeso.setBounds(474, 303, 59, 21);
 		frmGimnasioSanPancracio.getContentPane().add(lblPeso);
 		
@@ -778,6 +961,8 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_peso);
 		
 		JLabel lblNombre_1_2 = new JLabel("id:");
+		lblNombre_1_2.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblNombre_1_2.setForeground(new Color(0, 255, 0));
 		lblNombre_1_2.setBounds(504, 244, 31, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblNombre_1_2);
 		
@@ -788,6 +973,8 @@ public class App {
 		textField_idCliente.setEnabled(false);
 		
 		JLabel lblNombre_1_2_1 = new JLabel("id:");
+		lblNombre_1_2_1.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblNombre_1_2_1.setForeground(new Color(0, 255, 0));
 		lblNombre_1_2_1.setBounds(1065, 243, 31, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblNombre_1_2_1);
 		
@@ -798,6 +985,17 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textField_idEjercicio);
 		
 		JButton btnAñadirRutina= new JButton("Añadir");
+		btnAñadirRutina.setBackground(Color.WHITE);
+		btnAñadirRutina.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnAñadirRutina.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnAñadirRutina.setBackground(Color.WHITE);
+			}
+		});
 		btnAñadirRutina.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -845,6 +1043,17 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(textArea_EjerciciosCliente);
 		
 		JButton btnMostrar = new JButton("Mostrar");
+		btnMostrar.setBackground(Color.WHITE);
+		btnMostrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnMostrar.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnMostrar.setBackground(Color.WHITE);
+			}
+		});
 		btnMostrar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -867,10 +1076,12 @@ public class App {
 				textArea_EjerciciosCliente.setText(textArea_EjerciciosCliente.getText() + "\n\nÁNIMO CON EL ENTRENE!");
 			}
 		});
-		btnMostrar.setBounds(365, 437, 102, 25);
+		btnMostrar.setBounds(394, 437, 108, 25);
 		frmGimnasioSanPancracio.getContentPane().add(btnMostrar);
 		
 		JLabel lblImagenCliente = new JLabel("Imagen del cliente");
+		lblImagenCliente.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblImagenCliente.setForeground(new Color(0, 255, 0));
 		lblImagenCliente.setBounds(179, 339, 146, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblImagenCliente);
 		
@@ -881,6 +1092,8 @@ public class App {
 		labelImagenCliente.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		JLabel lblImagenDelEjercicio = new JLabel("Imagen del ejercicio");
+		lblImagenDelEjercicio.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblImagenDelEjercicio.setForeground(new Color(0, 255, 0));
 		lblImagenDelEjercicio.setBounds(751, 339, 146, 15);
 		frmGimnasioSanPancracio.getContentPane().add(lblImagenDelEjercicio);
 		
@@ -905,15 +1118,47 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(labelMostrarImgEjercicio);
 		
 		JButton btnZonaZumba = new JButton("Ver clientes");
+		btnZonaZumba.setBackground(Color.WHITE);
+		btnZonaZumba.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnZonaZumba.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnZonaZumba.setBackground(Color.WHITE);
+			}
+		});
 		btnZonaZumba.setBounds(861, 683, 119, 43);
 		frmGimnasioSanPancracio.getContentPane().add(btnZonaZumba);
 		
 		JButton btnZonaMusculacion = new JButton("Ver clientes");
+		btnZonaMusculacion.setBackground(Color.WHITE);
+		btnZonaMusculacion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnZonaMusculacion.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnZonaMusculacion.setBackground(Color.WHITE);
+			}
+		});
 		btnZonaMusculacion.setBounds(943, 556, 119, 43);
 		frmGimnasioSanPancracio.getContentPane().add(btnZonaMusculacion);
 		
 		JButton btnZonaAerobica = new JButton("Ver clientes");
-		
+		btnZonaAerobica.setBackground(Color.WHITE);
+		btnZonaAerobica.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnZonaAerobica.setBackground(Color.GREEN);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnZonaAerobica.setBackground(Color.WHITE);
+			}
+		});
 		btnZonaAerobica.setBounds(745, 556, 117, 43);
 		frmGimnasioSanPancracio.getContentPane().add(btnZonaAerobica);
 		
@@ -922,7 +1167,9 @@ public class App {
 		lblNewLabel.setBounds(555, 443, 600, 300);
 		frmGimnasioSanPancracio.getContentPane().add(lblNewLabel);
 		
-		JLabel lblSeleccionaZonaA = new JLabel("Zona a la que pertenece el ejercicio:");
+		JLabel lblSeleccionaZonaA = new JLabel("Zona a la que pertenece el ej.");
+		lblSeleccionaZonaA.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblSeleccionaZonaA.setForeground(new Color(0, 255, 0));
 		lblSeleccionaZonaA.setBounds(751, 301, 168, 24);
 		frmGimnasioSanPancracio.getContentPane().add(lblSeleccionaZonaA);
 		
