@@ -101,3 +101,13 @@ DELIMITER ;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `gimnasio`.`cliente` (`nombre`, `apellidos`, `edad`, `altura`, `peso`, `picPath`) VALUES ('Loas', 'Albinas', '23', '1.2', '55', '/com/hibernate/gui/Imagen_2.jpg');
+INSERT INTO `gimnasio`.`cliente` (`nombre`, `apellidos`, `edad`, `altura`, `peso`, `picPath`) VALUES ('Tridente', 'Marino', '55', '1.8', '42', '/com/hibernate/gui/Imagen_3.jpg');
+INSERT INTO `gimnasio`.`cliente` (`nombre`, `apellidos`, `edad`, `altura`, `peso`, `picPath`) VALUES ('Tobias', 'Gatinyo', '32', '1.8', '33', '/com/hibernate/gui/Imagen_4.jpg');
+INSERT INTO `gimnasio`.`cliente` (`nombre`, `apellidos`, `edad`, `altura`, `peso`, `picPath`) VALUES ('Regis', 'Lego', '55', '1.6', '77', '/com/hibernate/gui/Imagen_5.jpg');
+INSERT INTO `gimnasio`.`cliente` (`nombre`, `apellidos`, `edad`, `altura`, `peso`, `picPath`) VALUES ('Calvo', 'Pepinillo', '78', '1.3', '89', '/com/hibernate/gui/Imagen_6.jpg');
+
+INSERT INTO `gimnasio`.`ejercicio` (`nombre`, `numeroDeSeries`, `repeticiones`, `cargaEnKg`, `picPath`, `zona`) VALUES ('Biceps', '23', '12', '40', '/com/hibernate/gui/Imagen_1.jpg', 'MUSCULACION');
+INSERT INTO `gimnasio`.`ejercicio` (`nombre`, `numeroDeSeries`, `repeticiones`, `cargaEnKg`, `picPath`, `zona`) VALUES ('Triceps', '32', '23', '20', '/com/hibernate/gui/Imagen_2.jpg', 'AEROBICO');
+INSERT INTO `gimnasio`.`ejercicio` (`nombre`, `numeroDeSeries`, `repeticiones`, `cargaEnKg`, `picPath`, `zona`) VALUES ('Bicicleta', '20', '23', '23', '/com/hibernate/gui/Imagen_3.jpg', 'ZUMBA');

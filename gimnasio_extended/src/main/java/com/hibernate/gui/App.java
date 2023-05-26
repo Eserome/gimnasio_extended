@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -47,6 +48,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
@@ -509,6 +511,13 @@ public class App {
 		tablaEjercicios.getColumnModel().getColumn(4).setPreferredWidth(50);
 		tablaEjercicios.getColumnModel().getColumn(5).setPreferredWidth(100);
 		
+		final DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+	    for(int i=0; i<=5; i++) {
+	    	tablaEjercicios.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+	    }
+	    
+		
 		
 		picClientTextPath = new JTextField();
 		picClientTextPath.setBounds(323, 335, 183, 24);
@@ -527,6 +536,10 @@ public class App {
 		tablaClientes.getColumnModel().getColumn(3).setPreferredWidth(20);
 		tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(20);
 		tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(20);
+		for(int i=0; i<=5; i++) {
+			tablaClientes.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+	    }
+		
 		
 		JTable tablaCE = new JTable(modelCE);
 		
@@ -540,11 +553,14 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(scrollPaneEjercicios);
 		
 		JScrollPane scrollPaneCE = new JScrollPane(tablaCE);
+		for(int i=0; i<=1; i++) {
+			tablaCE.getColumnModel().getColumn(i).setCellRenderer(cellRenderer);
+	    }
 		scrollPaneCE.setBounds(1161, 228, 269, 107);
 		frmGimnasioSanPancracio.getContentPane().add(scrollPaneCE);
 		
 		JComboBox comboBox_MostrarClientes = new JComboBox();
-		comboBox_MostrarClientes.setBounds(221, 437, 168, 24);
+		comboBox_MostrarClientes.setBounds(337, 436, 188, 24);
 		frmGimnasioSanPancracio.getContentPane().add(comboBox_MostrarClientes);
 		
 		JComboBox comboBox_clienteId = new JComboBox();
@@ -637,7 +653,7 @@ public class App {
 					boolean valido = comprobarValidezCamposCliente(Double.parseDouble(corregirAltura(textField_altura.getText())), textField_altura, textField_edad, textField_peso, textField_nombreCliente, textField_apellidosCliente, picClientTextPath);
 					
 					if(valido) {
-						Cliente s = new Cliente(textField_nombreCliente.getText(),textField_apellidosCliente.getText(), Integer.parseInt(textField_edad.getText()),Double.parseDouble(textField_altura.getText()),Integer.parseInt(textField_peso.getText()),picClientTextPath.getText());
+						Cliente s = new Cliente(textField_nombreCliente.getText(),textField_apellidosCliente.getText(), Integer.parseInt(textField_edad.getText()),Double.parseDouble(corregirAltura(textField_altura.getText())),Integer.parseInt(textField_peso.getText()),picClientTextPath.getText());
 						ClienteDAO.insertCliente(s);
 						btnActualizarTabla.doClick();
 					} 
@@ -1058,7 +1074,7 @@ public class App {
 		frmGimnasioSanPancracio.getContentPane().add(separator);
 		
 		JTextArea textArea_EjerciciosCliente = new JTextArea();
-		textArea_EjerciciosCliente.setBounds(32, 466, 470, 274);
+		textArea_EjerciciosCliente.setBounds(32, 466, 658, 274);
 		frmGimnasioSanPancracio.getContentPane().add(textArea_EjerciciosCliente);
 		
 		JButton btnMostrar = new JButton("Mostrar");
@@ -1095,7 +1111,7 @@ public class App {
 				textArea_EjerciciosCliente.setText(textArea_EjerciciosCliente.getText() + "\n\nÁNIMO CON EL ENTRENE!");
 			}
 		});
-		btnMostrar.setBounds(394, 437, 108, 25);
+		btnMostrar.setBounds(537, 437, 153, 25);
 		frmGimnasioSanPancracio.getContentPane().add(btnMostrar);
 		
 		JLabel lblImagenCliente = new JLabel("Imagen del cliente");
@@ -1148,7 +1164,7 @@ public class App {
 				btnZonaZumba.setBackground(Color.WHITE);
 			}
 		});
-		btnZonaZumba.setBounds(861, 683, 119, 43);
+		btnZonaZumba.setBounds(1136, 668, 119, 43);
 		frmGimnasioSanPancracio.getContentPane().add(btnZonaZumba);
 		
 		JButton btnZonaMusculacion = new JButton("Ver clientes");
@@ -1163,7 +1179,7 @@ public class App {
 				btnZonaMusculacion.setBackground(Color.WHITE);
 			}
 		});
-		btnZonaMusculacion.setBounds(943, 556, 119, 43);
+		btnZonaMusculacion.setBounds(1218, 541, 119, 43);
 		frmGimnasioSanPancracio.getContentPane().add(btnZonaMusculacion);
 		
 		JButton btnZonaAerobica = new JButton("Ver clientes");
@@ -1178,12 +1194,12 @@ public class App {
 				btnZonaAerobica.setBackground(Color.WHITE);
 			}
 		});
-		btnZonaAerobica.setBounds(745, 556, 117, 43);
+		btnZonaAerobica.setBounds(1020, 541, 117, 43);
 		frmGimnasioSanPancracio.getContentPane().add(btnZonaAerobica);
 		
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setIcon(new ImageIcon(App.class.getResource("/com/hibernate/gui/mapaGimnasio.png")));
-		lblNewLabel.setBounds(555, 443, 600, 300);
+		lblNewLabel.setBounds(830, 428, 600, 300);
 		frmGimnasioSanPancracio.getContentPane().add(lblNewLabel);
 		
 		JLabel lblSeleccionaZonaA = new JLabel("Zona a la que pertenece el ej.");
