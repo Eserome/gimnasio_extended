@@ -20,6 +20,11 @@ import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Ventana inicial con un login pero no está en funcionamiento, darle a entrar directamente si se accede a través de el Opening
+ * @author a026577592b
+ *
+ */
 public class Opening {
 
 	private JFrame frmInicioGimnasioSan;

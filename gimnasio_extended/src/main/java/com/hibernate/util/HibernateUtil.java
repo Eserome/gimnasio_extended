@@ -21,9 +21,9 @@ public class HibernateUtil {
 				
 				Properties settings = new Properties();
 				settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver") ;
-				settings.put(Environment.URL, "jdbc:mysql://localhost:3306/gimnasio") ;
-				settings.put(Environment.USER, "root");
-				settings.put(Environment.PASS, "");
+				settings.put(Environment.URL, "jdbc:mysql://localhost:3307/gimnasio") ;
+				settings.put(Environment.USER, "alumno");
+				settings.put(Environment.PASS, "alumno");
 				settings.put(Environment.SHOW_SQL, "true") ;
 				settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread") ;
 				settings.put(Environment.HBM2DDL_AUTO, "update") ;

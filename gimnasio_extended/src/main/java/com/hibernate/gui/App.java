@@ -62,11 +62,24 @@ import com.hibernate.gui.App.zona;
 import javax.swing.border.LineBorder;
 
 
-
+/**
+ * Es la clase principal contenedora de la aplicación y gestiona los campos que introduce el entrenador
+ * @author a026577592b
+ *
+ */
 public class App {
 
+	/*
+	 * Ventana que se visualiza
+	 */
 	private JFrame frmGimnasioSanPancracio;
+	/*
+	 * Scrollpane para que la tabla pueda hacer scroll
+	 */
 	private JScrollPane scrollLista;
+	/**
+	 * Campos donde el entrenador introduce la información para la creción de clientes y ejercicios
+	 */
 	private JTextField textField_series;
 	private JTextField textField_repeticiones;
 	private JTextField textField_cargaEnKg;
@@ -80,8 +93,14 @@ public class App {
 	private JTextField textField_idEjercicio;
 	private JTextField textField_añadirClienteRutina;
 	private JTextField textField_añadirEjercicioCliente;
+	/**
+	 * Rutas de las imagenes
+	 */
 	private JTextField picClientTextPath;
 	private JTextField picExerciceTextPath;
+	/**
+	 * Tabla de ejercicios y clientes
+	 */
 	private JTable tablaEjercicios;
 	private JTable tablaClientes;
 
@@ -884,7 +903,7 @@ public class App {
 		JLabel lblClientes_1_1 = new JLabel("AFEGIR RUTINA");
 		lblClientes_1_1.setForeground(new Color(0, 255, 0));
 		lblClientes_1_1.setFont(new Font("OCR A Extended", Font.BOLD, 24));
-		lblClientes_1_1.setBounds(1161, 12, 198, 32);
+		lblClientes_1_1.setBounds(1161, 12, 227, 32);
 		frmGimnasioSanPancracio.getContentPane().add(lblClientes_1_1);
 		
 		JLabel lblCliente = new JLabel("Cliente:id");
@@ -912,7 +931,7 @@ public class App {
 		JLabel lblClientes_1_1_1 = new JLabel("BORRAR RUTINA");
 		lblClientes_1_1_1.setForeground(new Color(0, 255, 0));
 		lblClientes_1_1_1.setFont(new Font("OCR A Extended", Font.BOLD, 24));
-		lblClientes_1_1_1.setBounds(1161, 187, 209, 53);
+		lblClientes_1_1_1.setBounds(1161, 187, 227, 53);
 		frmGimnasioSanPancracio.getContentPane().add(lblClientes_1_1_1);
 		
 		
@@ -1252,9 +1271,17 @@ public class App {
 						textField_cargaEnKg.setText(model.getValueAt(index, 4).toString());
 						textField_añadirEjercicioCliente.setText(model.getValueAt(index, 1).toString() + ":" + model.getValueAt(index, 0).toString());
 						picExerciceTextPath.setText(EjercicioDAO.selectEjercicioByID(Integer.parseInt(textField_idEjercicio.getText())).getPicPath());
-						
 						Ejercicio e1 = EjercicioDAO.selectEjercicioByID(Integer.parseInt(textField_idEjercicio.getText()));
-						comboBoxZona.setSelectedItem(e1.getZona().toString());
+						
+						String zona = e1.getZona();
+						if(zona.compareTo("AEROBICO")==0) {
+							comboBoxZona.setSelectedIndex(0);
+						} else if(zona.compareTo("MUSCULACION")==0) {
+							comboBoxZona.setSelectedIndex(1);
+						} else {
+							comboBoxZona.setSelectedIndex(2);
+						}
+					
 						
 						if(picExerciceTextPath.getText().compareTo("/com/hibernate/gui/ejercicioInterrogante.png") == 0) {
 							labelMostrarImgEjercicio.setIcon(new ImageIcon(App.class.getResource("/com/hibernate/gui/ejercicioInterrogante.png")));

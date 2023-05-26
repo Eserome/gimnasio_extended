@@ -10,11 +10,18 @@ import com.hibernate.model.Cliente;
 import com.hibernate.util.HibernateUtil;
 
 
-
+/**
+ * Clase con funcionalidades para manejar los datos del cliente en la base de datos
+ * @author a026577592b
+ *
+ */
 public class ClienteDAO {
 
 	
-	
+	/**
+	 * Funcion para insertar el cliente en la base de datos
+	 * @param c Cliente a insertar
+	 */
 	public static void insertCliente(Cliente c) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -28,6 +35,10 @@ public class ClienteDAO {
 		}
 	}
 	
+	/**
+	 * Funcion para actualizar los datos de un cliente en concreto
+	 * @param c Cliente a actualizar
+	 */
 	public static void updateCliente(Cliente c) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -41,6 +52,10 @@ public class ClienteDAO {
 		}
 	}
 	
+	/**
+	 * Funcion para eliminar un cliente de la base de datos mediante un id
+	 * @param id Id del cliente a eliminar
+	 */
 	public static void deleteCliente(int id) {
 		Transaction transaction = null;
 		Cliente c= null;
@@ -56,6 +71,12 @@ public class ClienteDAO {
 		}
 	}
 	
+	
+	/**
+	 * funcion que selecciona un cliente en base a su id
+	 * @param id Id del cliente a seleccionar
+	 * @return Devuelve el cliente seleccionado con el id
+	 */
 	public static Cliente selectClienteByID(int id) {
 		Transaction transaction = null;
 		Cliente c = null;
@@ -73,6 +94,10 @@ public class ClienteDAO {
 		return c;
 	}
 	
+	/**
+	 * Funcion que devuelve en una lista todos los clientes de la base de datos
+	 * @return Devuelve una lista con todos los clientes
+	 */
 	public static List<Cliente> selectAllClientes() {
 		Transaction transaction = null;
 		List<Cliente> clientes = null;

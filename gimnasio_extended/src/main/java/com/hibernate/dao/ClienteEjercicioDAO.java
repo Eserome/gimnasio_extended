@@ -11,11 +11,18 @@ import com.hibernate.model.Ejercicio;
 import com.hibernate.util.HibernateUtil;
 
 
-
+/**
+ * Clase con funciones para manejar la tabla de las rutinas(ClientesEjercicios)
+ * @author a026577592b
+ *
+ */
 public class ClienteEjercicioDAO {
 
 	
-	
+	/**
+	 * Funcion para insertar una rutina en la tabla ClientesEjercicios
+	 * @param ce Rutina a insertar
+	 */
 	public static void insertClienteEjercicio(CE ce) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -29,6 +36,10 @@ public class ClienteEjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion para eliminar una rutina de la base de datos
+	 * @param ce Rutina a borrar de la base de datos
+	 */
 	public static void deleteCE(CE ce) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -42,6 +53,10 @@ public class ClienteEjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion para actualizar una rutina de la base de datos 
+	 * @param ce Rutina a actualizar
+	 */
 	public static void updateEjercicio(CE ce) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -55,6 +70,10 @@ public class ClienteEjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion que elimina una rutina en base al id de un ejercicio
+	 * @param id Id del ejercicio que esté en la rutina para eliminar
+	 */
 	public static void deleteClienteEjercicio(int id) {
 		Transaction transaction = null;
 		Ejercicio ej= null;
@@ -70,6 +89,11 @@ public class ClienteEjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion que selecciona todos los ejercicios que tiene un cliente en su rutina
+	 * @param cliente_id Id del cliente a consultar sus ejercicios
+	 * @return Devuelve una lista con las rutinas del cliente id filtrado
+	 */
 	public static List<CE> selectEjerciciosByClienteID(int cliente_id) {
 		Transaction transaction = null;
 		List<CE> ejercicios = null;
@@ -87,6 +111,12 @@ public class ClienteEjercicioDAO {
 		return ejercicios;
 	}
 	
+	/**
+	 * Funcion que devuelve una rutina en base a un cliente id y un ejercicio id
+	 * @param cliente_id Id del cliente de la rutina
+	 * @param ejercicio_id Id del ejercicio de la rutina
+	 * @return Devuvel la rutina con el cliente id y el ejercicio id
+	 */
 	public static CE selectCEbyIDS(int cliente_id, int ejercicio_id) {
 		Transaction transaction = null;
 		CE ce = null;
@@ -105,7 +135,10 @@ public class ClienteEjercicioDAO {
 		return ce;
 	}
 	
-	
+	/**
+	 * Funcion que selecciona todas las rutinas de la base de datos
+	 * @return Devuelve una lista con todas las rutinas
+	 */
 	public static List<CE> selectAllCES() {
 		Transaction transaction = null;
 		List<CE> ejercicios = null;

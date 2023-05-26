@@ -10,11 +10,18 @@ import com.hibernate.model.Ejercicio;
 import com.hibernate.util.HibernateUtil;
 
 
-
+/**
+ * Clase que contiene las funciones para manejar los ejercicos en la base de datos
+ * @author a026577592b
+ *
+ */
 public class EjercicioDAO {
 
 	
-	
+	/**
+	 * Funcion que inserta los ejercicios en la base de datos
+	 * @param ej Ejercicio a insertar
+	 */
 	public static void insertEjercicio(Ejercicio ej) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -28,6 +35,10 @@ public class EjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion para actualizar un ejercicio
+	 * @param ej Ejercicio modificado para actualizar
+	 */
 	public static void updateEjercicio(Ejercicio ej) {
 		Transaction transaction = null;
 		try (Session session=HibernateUtil.getSessionFactory().openSession()) {
@@ -41,6 +52,10 @@ public class EjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion para eliminar un determinado ejercicio de la base de datos
+	 * @param id Id del ejercicio a eliminar
+	 */
 	public static void deleteEjercicio(int id) {
 		Transaction transaction = null;
 		Ejercicio ej= null;
@@ -56,6 +71,11 @@ public class EjercicioDAO {
 		}
 	}
 	
+	/**
+	 * Funcion que selecciona un ejercicio y lo devuelve en basea un id
+	 * @param id Id del ejercicio buscado
+	 * @return Devuelve el ejercicio buscado con un id
+	 */
 	public static Ejercicio selectEjercicioByID(int id) {
 		Transaction transaction = null;
 		Ejercicio ej = null;
@@ -73,6 +93,10 @@ public class EjercicioDAO {
 		return ej;
 	}
 	
+	/**
+	 * Funcion que devuelve todos los ejercicios ejn lista de la base de datos
+	 * @return Lista con todos los ejercicios de la base de datos
+	 */
 	public static List<Ejercicio> selectAllEjercicios() {
 		Transaction transaction = null;
 		List<Ejercicio> ejercicios = null;
